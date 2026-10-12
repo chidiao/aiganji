@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "爱赶集",
-    "slug": "ganji",
-    "version": "1.0.0",
+    "slug": "aiganji",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "ganji",
+    "scheme": "aiganji",
     "userInterfaceStyle": "automatic",
     "ios": {
       "bundleIdentifier": "com.aiganji.app"
@@ -13,7 +13,7 @@
     "android": {
       "package": "com.aiganji.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#2E8BFF",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
@@ -28,9 +28,10 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#2E8BFF",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 500,
+          "resizeMode": "cover"
         }
       ]
     ],
@@ -41,8 +42,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "dcbe7cb9-e063-4966-8f27-6d758c683767"
+        "projectId": "c343711a-ef68-41e6-9fa3-7db8178c709c"
       }
-    }
+    },
+    "owner": "chidiao"
   }
 }

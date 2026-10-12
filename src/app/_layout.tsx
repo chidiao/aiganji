@@ -1,18 +1,43 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import * as SystemUI from 'expo-system-ui';
+import { useEffect } from 'react';
+import { Appearance } from 'react-native';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { Colors } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { SettingsProvider } from '@/hooks/use-settings';
 
-SplashScreen.preventAutoHideAsync();
+SystemUI.setBackgroundColorAsync(
+  Appearance.getColorScheme() === 'dark' ? Colors.dark.background : Colors.light.background,
+).catch(() => {});
 
-export default function TabLayout() {
+function ThemedRoot() {
   const colorScheme = useColorScheme();
+  const backgroundColor = Colors[colorScheme].background;
+
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync(backgroundColor).catch(() => {});
+  }, [backgroundColor]);
+
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
+      <Stack
+        screenOptions={{
+          contentStyle: { backgroundColor },
+          headerStyle: { backgroundColor },
+        }}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="about" options={{ title: '关于应用' }} />
+        <Stack.Screen name="settings" options={{ title: '首页设置' }} />
+      </Stack>
     </ThemeProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <SettingsProvider>
+      <ThemedRoot />
+    </SettingsProvider>
   );
 }

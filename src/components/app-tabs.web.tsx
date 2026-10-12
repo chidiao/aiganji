@@ -22,6 +22,9 @@ export default function AppTabs() {
           <TabTrigger name="index" href="/" asChild>
             <TabButton>赶集</TabButton>
           </TabTrigger>
+          <TabTrigger name="calendar" href="/calendar" asChild>
+            <TabButton>日历</TabButton>
+          </TabTrigger>
           <TabTrigger name="mine" href="/mine" asChild>
             <TabButton>我的</TabButton>
           </TabTrigger>
