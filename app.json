@@ -2,7 +2,7 @@
   "expo": {
     "name": "爱赶集",
     "slug": "aiganji",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "aiganji",
@@ -30,8 +30,8 @@
         {
           "backgroundColor": "#2E8BFF",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 500,
-          "resizeMode": "cover"
+          "imageWidth": 200,
+          "resizeMode": "contain"
         }
       ]
     ],
