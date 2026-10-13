@@ -41,7 +41,7 @@ export function TodayMarketCard({
           <ThemedText style={styles.sentence}>
             {todayIntro}
             <ThemedText style={styles.marketName}>{market}</ThemedText>
-            有集会。
+            有集市。
           </ThemedText>
         ) : (
           <>
@@ -54,7 +54,7 @@ export function TodayMarketCard({
                   WEEKDAYS[nextMarket.date.getDay()]
                 }），`}
                 <ThemedText style={styles.marketName}>{nextMarket.market}</ThemedText>
-                有集会。
+                有集市。
               </ThemedText>
             ) : null}
           </>
