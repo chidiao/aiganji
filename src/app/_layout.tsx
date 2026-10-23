@@ -1,26 +1,21 @@
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import { DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SystemUI from 'expo-system-ui';
 import { useEffect } from 'react';
-import { Appearance } from 'react-native';
 
 import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { SettingsProvider } from '@/hooks/use-settings';
 
-SystemUI.setBackgroundColorAsync(
-  Appearance.getColorScheme() === 'dark' ? Colors.dark.background : Colors.light.background,
-).catch(() => {});
+const backgroundColor = Colors.background;
+
+SystemUI.setBackgroundColorAsync(backgroundColor).catch(() => {});
 
 function ThemedRoot() {
-  const colorScheme = useColorScheme();
-  const backgroundColor = Colors[colorScheme].background;
-
   useEffect(() => {
     SystemUI.setBackgroundColorAsync(backgroundColor).catch(() => {});
-  }, [backgroundColor]);
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={DefaultTheme}>
       <Stack
         screenOptions={{
           contentStyle: { backgroundColor },

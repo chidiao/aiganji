@@ -1,10 +1,9 @@
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 
 import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function AppTabs() {
-  const colors = Colors[useColorScheme()];
+  const colors = Colors;
 
   return (
     <NativeTabs

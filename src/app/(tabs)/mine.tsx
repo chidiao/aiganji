@@ -5,18 +5,10 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ModalCard } from '@/components/modal-card';
-import { RadioRow } from '@/components/radio-row';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, Spacing } from '@/constants/theme';
-import { useSettings, type ThemeMode } from '@/hooks/use-settings';
 import { useTheme } from '@/hooks/use-theme';
-
-const THEME_LABELS: Record<ThemeMode, string> = {
-  system: '跟随系统',
-  light: '浅色',
-  dark: '深色',
-};
 
 type SettingRowProps = {
   icon: number;
@@ -48,20 +40,13 @@ function SettingRow({ icon, label, onPress, chevron, value }: SettingRowProps) {
 }
 
 export default function MineScreen() {
-  const { settings, setThemeMode } = useSettings();
   const [confirmVisible, setConfirmVisible] = useState(false);
-  const [themeVisible, setThemeVisible] = useState(false);
   const [status, setStatus] = useState('');
 
   const clearCache = async () => {
     await Promise.all([Image.clearMemoryCache(), Image.clearDiskCache()]);
     setConfirmVisible(false);
     setStatus('图片缓存已清除');
-  };
-
-  const selectTheme = (mode: ThemeMode) => {
-    setThemeMode(mode);
-    setThemeVisible(false);
   };
 
   return (
@@ -76,13 +61,6 @@ export default function MineScreen() {
             icon={require('@/assets/images/icons/settings.png')}
             label="首页设置"
             onPress={() => router.push('/settings')}
-            chevron={require('@/assets/images/icons/chevron-right.png')}
-          />
-          <SettingRow
-            icon={require('@/assets/images/icons/sun-moon.png')}
-            label="显示模式"
-            value={THEME_LABELS[settings.themeMode]}
-            onPress={() => setThemeVisible(true)}
             chevron={require('@/assets/images/icons/chevron-right.png')}
           />
           <SettingRow
@@ -129,28 +107,6 @@ export default function MineScreen() {
               确定
             </ThemedText>
           </Pressable>
-        </View>
-      </ModalCard>
-
-      <ModalCard visible={themeVisible} onClose={() => setThemeVisible(false)}>
-        <ThemedText style={styles.modalTitle}>显示模式</ThemedText>
-        <View style={styles.themeOptions}>
-          <RadioRow
-            label="跟随系统"
-            description="根据系统设置自动切换"
-            selected={settings.themeMode === 'system'}
-            onSelect={() => selectTheme('system')}
-          />
-          <RadioRow
-            label="浅色"
-            selected={settings.themeMode === 'light'}
-            onSelect={() => selectTheme('light')}
-          />
-          <RadioRow
-            label="深色"
-            selected={settings.themeMode === 'dark'}
-            onSelect={() => selectTheme('dark')}
-          />
         </View>
       </ModalCard>
     </ThemedView>
@@ -212,9 +168,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     gap: Spacing.two,
     marginTop: Spacing.two,
-  },
-  themeOptions: {
-    gap: Spacing.three,
   },
   modalButton: {
     paddingHorizontal: Spacing.four,

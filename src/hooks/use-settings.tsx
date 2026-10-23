@@ -3,13 +3,11 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 
 export type BackgroundMode = 'bing' | 'custom';
 export type QuoteMode = 'api' | 'custom';
-export type ThemeMode = 'system' | 'light' | 'dark';
 
 export type Settings = {
   backgroundMode: BackgroundMode;
   quoteMode: QuoteMode;
   customQuote: string;
-  themeMode: ThemeMode;
 };
 
 const STORAGE_KEY = 'home-settings';
@@ -18,7 +16,6 @@ const DEFAULT_SETTINGS: Settings = {
   backgroundMode: 'bing',
   quoteMode: 'api',
   customQuote: '',
-  themeMode: 'system',
 };
 
 type SettingsContextValue = {
@@ -26,7 +23,6 @@ type SettingsContextValue = {
   setBackgroundMode: (mode: BackgroundMode) => void;
   setQuoteMode: (mode: QuoteMode) => void;
   setCustomQuote: (quote: string) => void;
-  setThemeMode: (mode: ThemeMode) => void;
 };
 
 const SettingsContext = createContext<SettingsContextValue | null>(null);
@@ -44,9 +40,6 @@ function sanitizeSettings(raw: unknown): Partial<Settings> {
   }
   if (typeof value.customQuote === 'string') {
     next.customQuote = value.customQuote;
-  }
-  if (value.themeMode === 'system' || value.themeMode === 'light' || value.themeMode === 'dark') {
-    next.themeMode = value.themeMode;
   }
 
   return next;
@@ -94,15 +87,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next)).catch(() => {});
   };
 
-  const setThemeMode = (themeMode: ThemeMode) => {
-    const next = { ...settings, themeMode };
-    setSettings(next);
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next)).catch(() => {});
-  };
-
   return (
     <SettingsContext.Provider
-      value={{ settings, setBackgroundMode, setQuoteMode, setCustomQuote, setThemeMode }}>
+      value={{ settings, setBackgroundMode, setQuoteMode, setCustomQuote }}>
       {children}
     </SettingsContext.Provider>
   );

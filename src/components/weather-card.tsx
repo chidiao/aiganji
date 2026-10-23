@@ -7,7 +7,6 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
 import { getWeatherIcon, WEATHER_ICONS } from '@/constants/weather-icons';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 
 const WIND_DIRECTIONS = ['北风', '东北风', '东风', '东南风', '南风', '西南风', '西风', '西北风'];
 
@@ -18,11 +17,10 @@ function windDirectionText(degrees: number) {
 type WeatherStatus = 'loading' | 'ready' | 'error';
 
 export function WeatherCard() {
-  const scheme = useColorScheme();
   const [status, setStatus] = useState<WeatherStatus>('loading');
   const [weather, setWeather] = useState<CurrentWeather | null>(null);
 
-  const badgeColor = scheme === 'dark' ? 'rgba(255,255,255,0.10)' : 'rgba(15,23,42,0.25)';
+  const badgeColor = 'rgba(15,23,42,0.25)';
 
   useEffect(() => {
     let active = true;
