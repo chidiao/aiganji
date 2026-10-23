@@ -3,6 +3,7 @@ import * as SystemUI from 'expo-system-ui';
 import { useEffect } from 'react';
 
 import { Colors } from '@/constants/theme';
+import { AuthProvider } from '@/hooks/use-auth';
 import { SettingsProvider } from '@/hooks/use-settings';
 
 const backgroundColor = Colors.background;
@@ -24,6 +25,8 @@ function ThemedRoot() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="about" options={{ title: '关于应用' }} />
         <Stack.Screen name="settings" options={{ title: '首页设置' }} />
+        <Stack.Screen name="login" options={{ headerShown: false }} />
+        <Stack.Screen name="register" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );
@@ -32,7 +35,9 @@ function ThemedRoot() {
 export default function RootLayout() {
   return (
     <SettingsProvider>
-      <ThemedRoot />
+      <AuthProvider>
+        <ThemedRoot />
+      </AuthProvider>
     </SettingsProvider>
   );
 }

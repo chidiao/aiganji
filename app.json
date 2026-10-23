@@ -13,7 +13,7 @@
     "android": {
       "package": "com.aiganji.app",
       "adaptiveIcon": {
-        "backgroundColor": "#2E8BFF",
+        "backgroundColor": "#2E6FD6",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
@@ -28,7 +28,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#2E8BFF",
+          "backgroundColor": "#2E6FD6",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain"
