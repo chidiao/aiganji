@@ -1,0 +1,1 @@
+export { ApplicationVerifyScreen as default } from '@/components/tencent-chat-screens';

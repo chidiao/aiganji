@@ -1,0 +1,1 @@
+export { AddGroupScreen as default } from '@/components/tencent-chat-screens';

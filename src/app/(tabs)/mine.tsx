@@ -1,37 +1,44 @@
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import {
+  ChevronRight,
+  FileText,
+  Heart,
+  Info,
+  Settings,
+  Trash2,
+  UserRound,
+  type LucideIcon,
+} from 'lucide-react-native';
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ModalCard } from '@/components/modal-card';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { BottomTabInset, Spacing } from '@/constants/theme';
+import { useToast } from '@/components/toast';
+import { PageBackground, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 
-const PAGE_BACKGROUND = '#F2F3F5';
 const BRAND_BLUE = '#1B66D0';
 const DIVIDER_COLOR = '#E7E8EA';
 
 type RowItem = {
-  icon: number;
+  icon: LucideIcon;
   label: string;
   onPress: () => void;
 };
 
 function ListRow({ item, isLast }: { item: RowItem; isLast: boolean }) {
+  const Icon = item.icon;
   return (
     <View>
       <Pressable onPress={item.onPress} style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
-        <Image source={item.icon} style={styles.rowIcon} tintColor={BRAND_BLUE} />
+        <Icon size={22} color={BRAND_BLUE} strokeWidth={1.9} />
         <ThemedText style={styles.rowLabel}>{item.label}</ThemedText>
-        <Image
-          source={require('@/assets/images/icons/chevron-right.png')}
-          style={styles.chevron}
-          tintColor="#C9CDD3"
-        />
+        <ChevronRight size={18} color="#C9CDD3" strokeWidth={1.8} />
       </Pressable>
       {!isLast ? <View style={styles.divider} /> : null}
     </View>
@@ -57,34 +64,35 @@ function RowGroup({ label, rows, showLabel }: { label: string; rows: RowItem[]; 
 
 export default function MineScreen() {
   const { user, signOut } = useAuth();
+  const toast = useToast();
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [logoutVisible, setLogoutVisible] = useState(false);
-  const [status, setStatus] = useState('');
 
   const clearCache = async () => {
     await Promise.all([Image.clearMemoryCache(), Image.clearDiskCache()]);
     setConfirmVisible(false);
-    setStatus('图片缓存已清除');
+    toast.show('图片缓存已清除');
   };
 
   const handleLogout = () => {
     signOut();
     setLogoutVisible(false);
+    toast.show('已退出登录');
   };
 
   const commonRows: RowItem[] = [
     {
-      icon: require('@/assets/images/icons/settings.png'),
+      icon: Settings,
       label: '首页设置',
       onPress: () => router.push('/settings'),
     },
     {
-      icon: require('@/assets/images/icons/trash-2.png'),
+      icon: Trash2,
       label: '清除缓存',
       onPress: () => setConfirmVisible(true),
     },
     {
-      icon: require('@/assets/images/icons/info.png'),
+      icon: Info,
       label: '关于我们',
       onPress: () => router.push('/about'),
     },
@@ -92,47 +100,55 @@ export default function MineScreen() {
 
   const accountRows: RowItem[] = [
     {
-      icon: require('@/assets/images/icons/file-text.png'),
+      icon: FileText,
       label: '我的订单',
-      onPress: () => Alert.alert('提示', '功能开发中'),
+      onPress: () => toast.show('功能开发中'),
     },
     {
-      icon: require('@/assets/images/icons/heart.png'),
+      icon: Heart,
       label: '我的收藏',
-      onPress: () => Alert.alert('提示', '功能开发中'),
+      onPress: () => toast.show('功能开发中'),
     },
   ];
 
   return (
-    <ThemedView style={[styles.container, { backgroundColor: PAGE_BACKGROUND }]}>
-      <SafeAreaView style={styles.safeArea}>
+    <ThemedView style={[styles.container, { backgroundColor: PageBackground }]}>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
         <View style={styles.content}>
           <Pressable
             onPress={!user ? () => router.push('/login') : undefined}
             style={({ pressed }) => !user && pressed && styles.pressed}>
             <LinearGradient
-              colors={['#1668CE', '#2F9BF2']}
+              colors={['#1766CC', '#3188E8', '#5C9DEB']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.hero}>
               <View style={styles.avatar}>
-                <Image
-                  source={require('@/assets/images/tabIcons/user-round.png')}
-                  style={styles.avatarIcon}
-                  tintColor="#FFFFFF"
-                />
+                {user?.avatar ? (
+                  <Image source={{ uri: user.avatar }} style={styles.avatarIcon} contentFit="cover" />
+                ) : (
+                  <UserRound size={38} color="#FFFFFF" strokeWidth={1.8} />
+                )}
+              </View>
+              <View style={styles.profileInfo}>
+                <ThemedText style={styles.heroEyebrow}>{user ? '个人账号' : '欢迎来到赶集'}</ThemedText>
+                <ThemedText numberOfLines={1} style={styles.heroTitle}>
+                  {user?.nickname || '点击登录'}
+                </ThemedText>
+                <ThemedText numberOfLines={1} style={styles.heroSubtitle}>
+                  {user ? `账号 ${user.username}` : '登录后同步个人资料和收藏'}
+                </ThemedText>
               </View>
               {user ? (
-                <>
-                  <ThemedText style={styles.heroTitle}>{user.nickname}</ThemedText>
-                  <ThemedText style={styles.heroSubtitle}>关注 32 · 粉丝 108 · 动态 46</ThemedText>
-                </>
+                <View style={styles.loggedInBadge}>
+                  <ThemedText style={styles.loggedInText}>已登录</ThemedText>
+                </View>
               ) : (
-                <>
-                  <ThemedText style={styles.heroTitle}>点击登录</ThemedText>
-                  <ThemedText style={styles.heroSubtitle}>登录后开启赶集之旅</ThemedText>
-                </>
+                <View style={styles.heroAction}>
+                  <ChevronRight size={20} color="rgba(255,255,255,0.9)" strokeWidth={2} />
+                </View>
               )}
+              <View pointerEvents="none" style={styles.heroOrb} />
             </LinearGradient>
           </Pressable>
 
@@ -142,18 +158,15 @@ export default function MineScreen() {
 
           <RowGroup label="通用" rows={commonRows} showLabel />
 
-          {status ? (
-            <ThemedText type="small" themeColor="textSecondary" style={styles.status}>
-              {status}
-            </ThemedText>
-          ) : null}
-
           {user ? (
-            <Pressable
-              onPress={() => setLogoutVisible(true)}
-              style={({ pressed }) => [styles.logoutButton, pressed && styles.pressed]}>
-              <ThemedText style={styles.logoutText}>退出登录</ThemedText>
-            </Pressable>
+            <>
+              <View style={styles.spacer} />
+              <Pressable
+                onPress={() => setLogoutVisible(true)}
+                style={({ pressed }) => [styles.logoutButton, pressed && styles.pressed]}>
+                <ThemedText style={styles.logoutText}>退出登录</ThemedText>
+              </Pressable>
+            </>
           ) : null}
         </View>
       </SafeAreaView>
@@ -221,45 +234,87 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    paddingBottom: BottomTabInset + Spacing.four,
+    paddingBottom: Spacing.four,
+
   },
   content: {
     flex: 1,
     paddingHorizontal: Spacing.four,
   },
   hero: {
-    marginTop: Spacing.four,
-    borderRadius: Spacing.four,
+    minHeight: 150,
+    marginTop: Spacing.two,
+    borderRadius: 26,
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: Spacing.five,
-    paddingHorizontal: Spacing.four,
+    paddingVertical: 22,
+    paddingHorizontal: 20,
+    overflow: 'hidden',
+    position: 'relative',
   },
   avatar: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.8)',
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    borderWidth: 3,
+    borderColor: 'rgba(255,255,255,0.72)',
+    backgroundColor: 'rgba(255,255,255,0.24)',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   avatarIcon: {
-    width: 44,
-    height: 44,
+    width: '100%',
+    height: '100%',
+  },
+  profileInfo: {
+    flex: 1,
+    minWidth: 0,
+    marginLeft: 16,
+  },
+  heroEyebrow: {
+    color: 'rgba(255,255,255,0.78)',
+    fontSize: 12,
+    lineHeight: 17,
+    fontWeight: '600',
   },
   heroTitle: {
-    marginTop: Spacing.three,
-    fontSize: 22,
-    lineHeight: 30,
-    fontWeight: '700',
+    marginTop: 3,
+    fontSize: 21,
+    lineHeight: 28,
+    fontWeight: '800',
     color: '#FFFFFF',
   },
   heroSubtitle: {
-    marginTop: Spacing.half,
-    fontSize: 14,
-    lineHeight: 20,
-    color: 'rgba(255,255,255,0.85)',
+    marginTop: 4,
+    fontSize: 12,
+    lineHeight: 18,
+    color: 'rgba(255,255,255,0.82)',
+  },
+  heroAction: {
+    width: 26,
+    alignItems: 'flex-end',
+  },
+  loggedInBadge: {
+    paddingHorizontal: 9,
+    paddingVertical: 6,
+    borderRadius: 11,
+    backgroundColor: 'rgba(255,255,255,0.18)',
+  },
+  loggedInText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    lineHeight: 14,
+    fontWeight: '700',
+  },
+  heroOrb: {
+    position: 'absolute',
+    width: 166,
+    height: 166,
+    borderRadius: 83,
+    right: -78,
+    top: -100,
+    backgroundColor: 'rgba(255,255,255,0.10)',
   },
   section: {
     marginTop: Spacing.four,
@@ -279,28 +334,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.four,
     paddingVertical: Spacing.three,
   },
-  rowIcon: {
-    width: 22,
-    height: 22,
-  },
   rowLabel: {
     flex: 1,
-  },
-  chevron: {
-    width: 18,
-    height: 18,
   },
   divider: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: DIVIDER_COLOR,
     marginLeft: Spacing.four + 22 + Spacing.three,
   },
-  status: {
-    marginTop: Spacing.two,
+  spacer: {
+    flex: 1,
+    minHeight: Spacing.five,
   },
   logoutButton: {
-    marginTop: 'auto',
-    marginBottom: Spacing.two,
+    marginBottom: 0,
     backgroundColor: '#FFFFFF',
     borderRadius: Spacing.four,
     paddingVertical: 14,

@@ -1,5 +1,5 @@
-import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Check, Eye, EyeOff } from 'lucide-react-native';
 import { useState } from 'react';
 import {
   Pressable,
@@ -50,15 +50,11 @@ export function AuthInput({
           onPress={() => setVisible((v) => !v)}
           hitSlop={8}
           style={({ pressed }) => pressed && styles.pressed}>
-          <Image
-            source={
-              passwordHidden
-                ? require('@/assets/images/icons/eye.png')
-                : require('@/assets/images/icons/eye-off.png')
-            }
-            style={styles.eyeIcon}
-            tintColor="#9CA1A8"
-          />
+          {passwordHidden ? (
+            <Eye size={21} color="#9CA1A8" strokeWidth={1.9} />
+          ) : (
+            <EyeOff size={21} color="#9CA1A8" strokeWidth={1.9} />
+          )}
         </Pressable>
       ) : null}
     </View>
@@ -102,7 +98,7 @@ export function AgreementRow({ checked, onToggle, style }: AgreementRowProps) {
           checked && styles.checkboxChecked,
           pressed && styles.pressed,
         ]}>
-        {checked ? <ThemedText style={styles.checkmark}>✓</ThemedText> : null}
+        {checked ? <Check size={14} color="#FFFFFF" strokeWidth={3} /> : null}
       </Pressable>
       <ThemedText type="small" themeColor="textSecondary" style={styles.agreementText}>
         我已阅读并同意 <ThemedText type="small" style={styles.link}>《用户协议》</ThemedText> 和{' '}
@@ -129,10 +125,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#17181A',
     paddingVertical: 0,
-  },
-  eyeIcon: {
-    width: 22,
-    height: 22,
   },
   gradientButton: {
     height: 56,
@@ -163,11 +155,6 @@ const styles = StyleSheet.create({
   checkboxChecked: {
     backgroundColor: '#2E6CD6',
     borderColor: '#2E6CD6',
-  },
-  checkmark: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    lineHeight: 14,
   },
   agreementText: {
     flex: 1,

@@ -1,11 +1,10 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { ChevronRight } from 'lucide-react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { type MarketName } from '@/constants/market';
 import { Spacing } from '@/constants/theme';
-
-const WEEKDAYS = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 
 type NextMarketInfo = {
   date: Date;
@@ -32,30 +31,29 @@ export function TodayMarketCard({
 
   return (
     <Pressable onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
-      <ThemedView type="backgroundElement" style={styles.card}>
-        <ThemedText type="small" themeColor="textSecondary">
-          今日集市
-        </ThemedText>
+      <ThemedView style={styles.card}>
+        <View style={styles.header}>
+          <ThemedText style={styles.eyebrow}>赶集安排</ThemedText>
+          <ChevronRight size={18} color="#8490A1" strokeWidth={1.8} />
+        </View>
 
         {market ? (
-          <ThemedText style={styles.sentence}>
-            {todayIntro}
-            <ThemedText style={styles.marketName}>{market}</ThemedText>
-            有集市。
-          </ThemedText>
+          <>
+            <ThemedText style={styles.status}>今天有集</ThemedText>
+            <ThemedText style={styles.marketName}>{market}集市</ThemedText>
+            <ThemedText style={styles.detail}>{todayIntro}欢迎来逛。</ThemedText>
+          </>
         ) : (
           <>
-            <ThemedText style={styles.sentence}>
-              {todayIntro}今天没有集市。
-            </ThemedText>
+            <ThemedText style={styles.status}>今天休集</ThemedText>
+            <ThemedText style={styles.detail}>{todayIntro}附近村集按农历日期轮换。</ThemedText>
             {nextMarket ? (
-              <ThemedText style={styles.sentence}>
-                {`最近的是${nextMarket.date.getMonth() + 1}月${nextMarket.date.getDate()}日（${
-                  WEEKDAYS[nextMarket.date.getDay()]
-                }），`}
-                <ThemedText style={styles.marketName}>{nextMarket.market}</ThemedText>
-                有集市。
-              </ThemedText>
+              <View style={styles.nextMarket}>
+                <ThemedText style={styles.nextLabel}>下一场</ThemedText>
+                <ThemedText style={styles.nextText}>
+                  {`${nextMarket.date.getMonth() + 1}月${nextMarket.date.getDate()}日 · ${nextMarket.market}`}
+                </ThemedText>
+              </View>
             ) : null}
           </>
         )}
@@ -66,19 +64,61 @@ export function TodayMarketCard({
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: Spacing.four,
+    borderRadius: 22,
     padding: Spacing.four,
-    gap: Spacing.two,
+    gap: 6,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E8ECF2',
   },
-  sentence: {
-    fontSize: 16,
-    lineHeight: 26,
-    fontWeight: '500',
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  eyebrow: {
+    color: '#657184',
+    fontSize: 13,
+    fontWeight: '700',
+    letterSpacing: 0.4,
+  },
+  status: {
+    color: '#1B66D0',
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '700',
   },
   marketName: {
-    fontSize: 16,
+    fontSize: 24,
+    lineHeight: 30,
     fontWeight: '800',
-    color: '#3c87f7',
+    color: '#172238',
+  },
+  detail: {
+    marginTop: 2,
+    color: '#657184',
+    fontSize: 14,
+    lineHeight: 21,
+  },
+  nextMarket: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: '#E8ECF2',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  nextLabel: {
+    color: '#7A8493',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  nextText: {
+    color: '#1B66D0',
+    fontSize: 13,
+    fontWeight: '700',
   },
   pressed: {
     opacity: 0.7,

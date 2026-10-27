@@ -20,7 +20,7 @@ export function WeatherCard() {
   const [status, setStatus] = useState<WeatherStatus>('loading');
   const [weather, setWeather] = useState<CurrentWeather | null>(null);
 
-  const badgeColor = 'rgba(15,23,42,0.25)';
+  const badgeColor = '#EAF3FF';
 
   useEffect(() => {
     let active = true;
@@ -41,10 +41,14 @@ export function WeatherCard() {
   }, []);
 
   return (
-    <ThemedView type="backgroundElement" style={styles.card}>
-      <ThemedText type="small" themeColor="textSecondary">
-        今日天气
-      </ThemedText>
+    <ThemedView style={styles.card}>
+      <View style={styles.header}>
+        <ThemedText style={styles.eyebrow}>今日天气</ThemedText>
+        <View style={styles.liveBadge}>
+          <View style={styles.liveDot} />
+          <ThemedText style={styles.liveText}>本地实况</ThemedText>
+        </View>
+      </View>
 
       {status === 'ready' && weather ? (
         <>
@@ -66,8 +70,8 @@ export function WeatherCard() {
               />
             </View>
           </View>
-          <ThemedText type="small" themeColor="textSecondary">
-            风速 {Math.round(weather.windspeed)} km/h · {windDirectionText(weather.winddirection)}
+          <ThemedText style={styles.weatherMeta}>
+            风速 {Math.round(weather.windspeed)} km/h　·　{windDirectionText(weather.winddirection)}
           </ThemedText>
         </>
       ) : status === 'error' ? (
@@ -85,9 +89,45 @@ export function WeatherCard() {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: Spacing.four,
+    borderRadius: 22,
     padding: Spacing.four,
-    gap: Spacing.two,
+    gap: 10,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E8ECF2',
+  },
+  header: {
+    minHeight: 22,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  eyebrow: {
+    color: '#657184',
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '700',
+  },
+  liveBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    borderRadius: 10,
+    backgroundColor: '#F2F6FC',
+  },
+  liveDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#3A9B6D',
+  },
+  liveText: {
+    color: '#687386',
+    fontSize: 10,
+    lineHeight: 14,
+    fontWeight: '600',
   },
   mainRow: {
     flexDirection: 'row',
@@ -96,16 +136,16 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
   },
   iconBadge: {
-    width: 68,
-    height: 68,
-    borderRadius: Spacing.three,
+    width: 62,
+    height: 62,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
   },
   icon: {
-    width: 68,
-    height: 68,
+    width: 62,
+    height: 62,
   },
   tempColumn: {
     gap: Spacing.half,
@@ -116,8 +156,14 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   condition: {
-    fontSize: 18,
-    lineHeight: 24,
+    color: '#657184',
+    fontSize: 15,
+    lineHeight: 21,
     fontWeight: '600',
+  },
+  weatherMeta: {
+    color: '#7A8493',
+    fontSize: 12,
+    lineHeight: 18,
   },
 });

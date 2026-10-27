@@ -12,7 +12,7 @@ import { ThemedView } from '@/components/themed-view';
 import { TodayMarketCard } from '@/components/today-market-card';
 import { WeatherCard } from '@/components/weather-card';
 import { getMarket } from '@/constants/market';
-import { BottomTabInset, Spacing } from '@/constants/theme';
+import { PageBackground, Spacing } from '@/constants/theme';
 import { useSettings } from '@/hooks/use-settings';
 import { getDayGanzhi, getMonthGanzhi } from '@/utils/ganzhi';
 import { solarToLunar } from '@/utils/lunar';
@@ -96,11 +96,22 @@ export default function HomeScreen() {
     settings.quoteMode === 'custom' ? settings.customQuote.trim() : (quote ?? '');
 
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
+    <ThemedView style={[styles.container, { backgroundColor: PageBackground }]}>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}>
+          <View style={styles.pageHeading}>
+            <View>
+              <ThemedText style={styles.eyebrow}>乡间日常 · 集市日历</ThemedText>
+              <ThemedText style={styles.pageTitle}>赶集</ThemedText>
+            </View>
+            <View style={styles.dateBadge}>
+              <ThemedText style={styles.dateBadgeText}>{today.getMonth() + 1}月</ThemedText>
+              <ThemedText style={styles.dateBadgeDay}>{today.getDate()}</ThemedText>
+            </View>
+          </View>
+
           <View style={styles.card}>
             <ImageBackground
               source={backgroundSource}
@@ -119,7 +130,7 @@ export default function HomeScreen() {
                 <View style={styles.cardTopRow}>
                   <View>
                     <ThemedText style={[styles.yearMonth, textShadow]}>
-                      {today.getFullYear()} / {today.getMonth() + 1}
+                      {today.getFullYear()}年 {today.getMonth() + 1}月
                     </ThemedText>
                     <ThemedText style={[styles.dayNumber, textShadow]}>
                       {today.getDate()}
@@ -141,7 +152,7 @@ export default function HomeScreen() {
                 </View>
 
                 <ThemedText numberOfLines={3} style={[styles.quote, textShadow]}>
-                  {effectiveQuote}
+                  {effectiveQuote || '去集市走走，把日子过得有滋有味。'}
                 </ThemedText>
               </View>
             </ImageBackground>
@@ -171,14 +182,54 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.four,
-    gap: Spacing.five,
+    paddingTop: Spacing.two,
+    paddingBottom: Spacing.four,
+    gap: Spacing.three,
+  },
+  pageHeading: {
+    minHeight: 68,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  eyebrow: {
+    color: '#657184',
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 1,
+    fontWeight: '600',
+  },
+  pageTitle: {
+    marginTop: 2,
+    fontSize: 28,
+    lineHeight: 34,
+    fontWeight: '800',
+    color: '#172238',
+  },
+  dateBadge: {
+    width: 54,
+    height: 54,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  dateBadgeText: {
+    color: '#6B7280',
+    fontSize: 11,
+    lineHeight: 14,
+    fontWeight: '600',
+  },
+  dateBadgeDay: {
+    color: '#1B66D0',
+    fontSize: 20,
+    lineHeight: 24,
+    fontWeight: '800',
   },
   card: {
     width: '100%',
-    aspectRatio: 1.35,
-    borderRadius: Spacing.four,
+    aspectRatio: 1.28,
+    borderRadius: 26,
     overflow: 'hidden',
     backgroundColor: '#111111',
   },
@@ -189,7 +240,7 @@ const styles = StyleSheet.create({
   cardContent: {
     flex: 1,
     justifyContent: 'space-between',
-    padding: Spacing.four,
+    padding: 22,
   },
   cardTopRow: {
     flexDirection: 'row',
@@ -204,8 +255,8 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.92)',
   },
   dayNumber: {
-    fontSize: 88,
-    lineHeight: 94,
+    fontSize: 82,
+    lineHeight: 88,
     fontWeight: '800',
     color: '#ffffff',
   },
@@ -221,9 +272,10 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.92)',
   },
   quote: {
-    fontSize: 15,
-    lineHeight: 22,
-    fontWeight: '500',
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '600',
+    maxWidth: '88%',
     color: 'rgba(255, 255, 255, 0.95)',
   },
 });

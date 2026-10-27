@@ -2,13 +2,20 @@
   "expo": {
     "name": "爱赶集",
     "slug": "aiganji",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "aiganji",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "bundleIdentifier": "com.aiganji.app"
+      "bundleIdentifier": "com.aiganji.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "用于拍摄并发送聊天图片和视频",
+        "NSPhotoLibraryUsageDescription": "用于选择聊天图片和视频",
+        "NSPhotoLibraryAddUsageDescription": "用于保存聊天图片",
+        "NSMicrophoneUsageDescription": "用于录制聊天语音",
+        "NSDocumentsFolderUsageDescription": "用于选择聊天文件"
+      }
     },
     "android": {
       "package": "com.aiganji.app",
@@ -17,11 +24,20 @@
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
-    },
-    "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_MEDIA_IMAGES",
+        "READ_MEDIA_VIDEO",
+        "READ_MEDIA_AUDIO",
+        "ACCESS_NETWORK_STATE",
+        "ACCESS_WIFI_STATE",
+        "VIBRATE",
+        "WAKE_LOCK"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -33,7 +49,8 @@
           "imageWidth": 200,
           "resizeMode": "contain"
         }
-      ]
+      ],
+      "react-native-video"
     ],
     "experiments": {
       "typedRoutes": true,

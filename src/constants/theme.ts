@@ -7,6 +7,8 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
+export const PageBackground = '#F2F3F5';
+
 export const Colors = {
   text: '#000000',
   background: '#ffffff',

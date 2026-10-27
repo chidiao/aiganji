@@ -1,0 +1,1 @@
+export { SearchInConversationScreen as default } from '@/components/tencent-chat-screens';

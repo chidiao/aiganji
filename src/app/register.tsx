@@ -1,38 +1,65 @@
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
+import { ChevronLeft } from 'lucide-react-native';
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AgreementRow, AuthInput, AUTH_LINK_COLOR, GradientButton } from '@/components/auth-ui';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { useToast } from '@/components/toast';
 import { Spacing } from '@/constants/theme';
+import { registerApi } from '@/api/auth';
 import { useAuth } from '@/hooks/use-auth';
 
 export default function RegisterScreen() {
   const { signIn } = useAuth();
+  const toast = useToast();
   const [nickname, setNickname] = useState('');
   const [account, setAccount] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [agreed, setAgreed] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleRegister = () => {
-    if (!agreed) {
-      Alert.alert('提示', '请先阅读并同意用户协议和隐私政策');
+  const handleRegister = async () => {
+    if (submitting) {
       return;
     }
-    if (!account.trim() || !password) {
-      Alert.alert('提示', '请输入账号和密码');
+    if (!agreed) {
+      toast.show('请先阅读并同意用户协议和隐私政策');
+      return;
+    }
+    const username = account.trim();
+    if (!/^[a-zA-Z0-9_]{3,32}$/.test(username)) {
+      toast.show('账号需为 3-32 位字母、数字或下划线');
+      return;
+    }
+    if (!password) {
+      toast.show('请设置密码');
       return;
     }
     if (password.length < 8 || password.length > 20) {
-      Alert.alert('提示', '密码长度需要 8-20 位');
+      toast.show('密码长度需要 8-20 位');
       return;
     }
-    signIn(nickname.trim() || account.trim());
-    router.replace('/(tabs)/mine');
+    setSubmitting(true);
+    try {
+      toast.showLoading('注册中');
+      const { token, user } = await registerApi({
+        username,
+        password,
+        nickname: nickname.trim() || undefined,
+        phone: phone.trim() || undefined,
+      });
+      signIn(token, user);
+      toast.show('注册成功');
+      router.replace('/(tabs)/mine');
+    } catch (error) {
+      toast.show(error instanceof Error ? error.message : '注册失败，请稍后重试');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -42,11 +69,7 @@ export default function RegisterScreen() {
           onPress={() => router.back()}
           hitSlop={8}
           style={({ pressed }) => [styles.back, pressed && styles.pressed]}>
-          <Image
-            source={require('@/assets/images/icons/chevron-left.png')}
-            style={styles.backIcon}
-            tintColor="#17181A"
-          />
+          <ChevronLeft size={26} color="#17181A" strokeWidth={2} />
         </Pressable>
 
         <ThemedText style={styles.title}>创建账号</ThemedText>
@@ -106,10 +129,6 @@ const styles = StyleSheet.create({
   back: {
     marginTop: Spacing.four,
     alignSelf: 'flex-start',
-  },
-  backIcon: {
-    width: 26,
-    height: 26,
   },
   title: {
     marginTop: Spacing.four,
