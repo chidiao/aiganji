@@ -10,7 +10,6 @@ import {
 } from 'react';
 import { ActivityIndicator, Animated, Easing, StyleSheet, Text, View } from 'react-native';
 
-import { BottomTabInset } from '@/constants/theme';
 
 type ToastController = {
   show: (message: string) => void;
@@ -117,7 +116,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: BottomTabInset + 48,
+    top: '50%',
+    transform: [{ translateY: -24 }],
     alignItems: 'center',
   },
   toast: {

@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { ChevronLeft } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -65,6 +66,7 @@ export default function RegisterScreen() {
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
+      <KeyboardAwareScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" bottomOffset={24}>
         <Pressable
           onPress={() => router.back()}
           hitSlop={8}
@@ -112,6 +114,7 @@ export default function RegisterScreen() {
             <ThemedText style={styles.linkLarge}>直接登录</ThemedText>
           </Pressable>
         </View>
+      </KeyboardAwareScrollView>
       </SafeAreaView>
     </ThemedView>
   );
@@ -126,6 +129,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: Spacing.four,
   },
+  content: { flexGrow: 1, paddingBottom: Spacing.four },
   back: {
     marginTop: Spacing.four,
     alignSelf: 'flex-start',

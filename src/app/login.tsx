@@ -1,5 +1,6 @@
 import { Image } from 'expo-image'
 import { router } from 'expo-router'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import { useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -50,6 +51,7 @@ export default function LoginScreen() {
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
+        <KeyboardAwareScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" bottomOffset={24}>
         <View style={styles.logoArea}>
           <Image source={require('@/assets/images/icon.png')} style={styles.logo} />
         </View>
@@ -80,6 +82,10 @@ export default function LoginScreen() {
 
           <GradientButton label="登  录" onPress={handleLogin} />
 
+          <Pressable onPress={() => { setAccount('guest_7k2m'); setPassword('G7k2m!9x'); }} style={({ pressed }) => [styles.guestButton, pressed && styles.pressed]}>
+            <ThemedText style={styles.linkLarge}>游客登录</ThemedText>
+          </Pressable>
+
           <AgreementRow checked={agreed} onToggle={() => setAgreed((v) => !v)} style={styles.agreementSpacing} />
 
           <View style={styles.footer}>
@@ -89,6 +95,7 @@ export default function LoginScreen() {
             </Pressable>
           </View>
         </View>
+        </KeyboardAwareScrollView>
       </SafeAreaView>
     </ThemedView>
   )
@@ -103,6 +110,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: Spacing.four
   },
+  content: { flexGrow: 1, paddingBottom: Spacing.four },
   logoArea: {
     alignItems: 'center',
     paddingTop: Spacing.five
@@ -142,6 +150,7 @@ const styles = StyleSheet.create({
   agreementSpacing: {
     marginTop: Spacing.five
   },
+  guestButton: { alignSelf: 'center', marginTop: Spacing.three, padding: Spacing.two },
   footer: {
     marginTop: Spacing.five,
     flexDirection: 'row',
